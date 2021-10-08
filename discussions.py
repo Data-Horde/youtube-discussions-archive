@@ -72,7 +72,7 @@ def docontinuation(continuation, endpoint="browse"):
                     "user": {"lockedSafetyMode": False}}, "continuation": continuation},
                 headers={
                     "x-youtube-client-name": "1",
-                    "x-youtube-client-version": INNERTUBE_API_KEY,
+                    "x-youtube-client-version": INNERTUBE_CLIENT_VERSION,
                     "User-Agent": USER_AGENT},
                 allow_redirects=False)
 
