@@ -275,13 +275,14 @@ def main(channel_id, download_dir, json_file_base=None):
     return True, channel_ids
 
 
-if len(argv) == 2:
-    res = main(argv[1], '.')
-    print(res)
-else:
-    print("""YouTube Discussion Tab Downloader by tech234a
-    ***THIS SCRIPT IS EXPERIMENTAL***
-    Rate-limit checks are untested. Additionally, further accuracy checks should be performed.
-    USAGE: python3 discussions.py [Channel UCID]
-    REQUIREMENTS: requests (pip install requests)
-    NOTES: Only provide 1 channel UCID at a time. Usernames/channel URLs are not supported.""")
+if __name__ == '__main__':
+    if len(argv) == 2:
+        res = main(argv[1], '.')
+        print(res)
+    else:
+        print("""YouTube Discussion Tab Downloader by tech234a
+        ***THIS SCRIPT IS EXPERIMENTAL***
+        Rate-limit checks are untested. Additionally, further accuracy checks should be performed.
+        USAGE: python3 discussions.py [Channel UCID]
+        REQUIREMENTS: requests (pip install requests)
+        NOTES: Only provide 1 channel UCID at a time. Usernames/channel URLs are not supported.""")
