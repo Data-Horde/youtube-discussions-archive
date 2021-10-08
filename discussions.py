@@ -8,6 +8,9 @@ from sys import argv
 from pathlib import Path
 from datetime import datetime
 
+
+class DownloadException(Exception):
+    pass
 #todo: check for accuracy, add/test ratelimit checks if needed, additional language locking (headers)/ gl US
 
 #completed: reply pagination, author hearts, retrieval timestamp, handle no votecount, pinned? - not an option
@@ -109,16 +112,13 @@ def docontinuation(continuation, endpoint="browse"):
                     else:
                         print("WARNING: Error from YouTube, no error message provided")
                 elif "contents" in myrjsonkeys:
-                    print("WARNING: contents key detected in response, which indicates that we have not received discussion tab data. Retrieving discussion tab data for this channel is likely not possible. This error typically occurs on automatically-generated YouTube channels. Aborting.")
-                    return "[fail]"
+                    raise DownloadException("Contents key detected in response, which indicates that we have not received discussion tab data. Retrieving discussion tab data for this channel is likely not possible. This error typically occurs on automatically-generated YouTube channels. Aborting.")
                 elif "continuationContents" in myrjsonkeys:
-                    print("WARNING: continuationContents key detected in response, which indicates that we have not received discussion tab data. Retrieving discussion tab data for this channel is likely not possible. This error typically occurs on automatically-generated YouTube channels. Aborting.")
-                    return "[fail]"
+                    raise DownloadException("continuationContents key detected in response, which indicates that we have not received discussion tab data. Retrieving discussion tab data for this channel is likely not possible. This error typically occurs on automatically-generated YouTube channels. Aborting.")
                 elif "onResponseReceivedEndpoints" in myrjsonkeys and r.status_code == 200:
                     return myrjson["onResponseReceivedEndpoints"]
                 elif r.status_code == 404:
-                    print("WARNING: 404 status code retrieved, aborting.")
-                    return "[fail]"
+                    raise DownloadException("404 status code retrieved, aborting.")
                 elif r.status_code != 200:
                     print("WARNING: Non-200 status code received")
                     #print(r.status_code)
@@ -132,8 +132,7 @@ def docontinuation(continuation, endpoint="browse"):
         except requests.exceptions.RequestException as e:
             print("WARNING: Other error: " + str(e))
         if tries > 5:
-            print("WARNING: 5 failed attempts, aborting")
-            return "[fail]"
+            raise DownloadException("Retries exhausted, aborting")
         tries += 1
         timetosleep = 10 * (2 ** (tries-2)) # 5, 10, 20, 40, 80, 160, 320, 640, 1280, 2560 https://findwork.dev/blog/advanced-usage-python-requests-timeouts-retries-hooks/
         print("INFO:", datetime.now(), ": Sleeping", timetosleep, "seconds")
@@ -189,8 +188,6 @@ def extractcomment(comment, is_reply=False):
             else:
                 commentroot["expected_replies"] = int(creplycntruns[1]["text"])
             myjrind = docontinuation(comment["commentThreadRenderer"]["replies"]["commentRepliesRenderer"]["contents"][0]["continuationItemRenderer"]["continuationEndpoint"]["continuationCommand"]["token"], "comment/get_comment_replies")
-            if myjrind == "[fail]":
-                return "fail", 0, comment_channel_ids
             if "continuationItems" in myjrind[0]["appendContinuationItemsAction"].keys():
                 myjr = myjrind[0]["appendContinuationItemsAction"]["continuationItems"]
             else:
@@ -207,8 +204,6 @@ def extractcomment(comment, is_reply=False):
 
                 if "continuationItemRenderer" in myjr[-1].keys():
                     myjrin = docontinuation(myjr[-1]["continuationItemRenderer"]["button"]["buttonRenderer"]["command"]["continuationCommand"]["token"], "comment/get_comment_replies")
-                    if myjrin == "[fail]":
-                        return "fail", 0, comment_channel_ids
 
                     if "continuationItems" in myjrin[0]["appendContinuationItemsAction"].keys():
                         myjr = myjrin[0]["appendContinuationItemsAction"]["continuationItems"]
@@ -232,8 +227,6 @@ def main(channel_id, download_dir):
 
     try:
         cont = docontinuation(_generate_discussion_continuation(channel_id))
-        if cont == "[fail]":
-            return False, set()
 
         if "continuationItems" in cont[1]["reloadContinuationItemsCommand"].keys():
             myj = cont[1]["reloadContinuationItemsCommand"]["continuationItems"]
@@ -256,16 +249,12 @@ def main(channel_id, download_dir):
         for item in myj:
             if "commentThreadRenderer" in item.keys():
                 commentfinal, addcnt, comment_channel_ids = extractcomment(item)
-                if commentfinal == "fail":
-                    return False, set()
                 comments.append(commentfinal)
                 channel_ids.update(comment_channel_ids)
                 commentcnt += addcnt
 
         if "continuationItemRenderer" in myj[-1].keys():
             myjino = docontinuation(myj[-1]["continuationItemRenderer"]["continuationEndpoint"]["continuationCommand"]["token"])
-            if myj == "[fail]":
-                return False, set()
 
             if "continuationItems" in myjino[0]["appendContinuationItemsAction"].keys():
                 myj = myjino[0]["appendContinuationItemsAction"]["continuationItems"]

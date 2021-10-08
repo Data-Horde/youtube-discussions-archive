@@ -82,10 +82,9 @@ class PrepareDirectories(SimpleTask):
 
 class DiscussionsDownload(SimpleTask):
     def process(self, item):
-        try:
-            result, _ = discussions.main(item['item_name'], item['item_dir'])
-        except Exception as e:
-            ...
+        result, _ = discussions.main(item['item_name'], item['item_dir'])
+        if not result:
+            raise Exception('Unknown Error')
 
 pipeline = Pipeline(
     CheckIP(),
