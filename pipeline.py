@@ -16,9 +16,9 @@ import os
 import shutil
 import hashlib
 import time
-#from .. import discussions
 import sys
 
+# Import discussions which is next to the script file
 # https://stackoverflow.com/a/50905, https://stackoverflow.com/a/67692
 import os.path
 import inspect
@@ -30,11 +30,11 @@ spec.loader.exec_module(discussions)
 if StrictVersion(seesaw.__version__) < StrictVersion('0.8.5'):
     raise Exception('This pipeline needs seesaw version 0.8.5 or higher.')
 
-VERSION = '20211008.02'
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'
+VERSION = '20211008.01'
+# USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'
 TRACKER_ID = 'youtube-discussions'
 TRACKER_HOST = 'localhost:9080'
-MULTI_ITEM_SIZE = 1  # TODO: what is this?
+MULTI_ITEM_SIZE = 1
 
 
 project = Project(
