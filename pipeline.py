@@ -90,12 +90,11 @@ class PrepareDirectories(SimpleTask):
         if os.path.isdir(dirname):
             shutil.rmtree(dirname)
         os.makedirs(dirname)
-        item['json_file_base'] = channel_id
-        # item['json_file_base'] = '-'.join([
-        #     self.json_prefix,
-        #     channel_id,
-        #     time.strftime('%Y%m%d-%H%M%S')
-        # ])
+        item['json_file_base'] = '-'.join([
+            self.json_prefix,
+            channel_id,
+            time.strftime('%Y%m%d-%H%M%S')
+        ])
         item['item_dir'] = dirname
 
 
@@ -114,7 +113,7 @@ class DiscussionsDownload(SimpleTask):
         SimpleTask.__init__(self, 'DiscussionsDownload')
 
     def process(self, item):
-        result, _ = discussions.main(item['item_name'], item['item_dir'])
+        result, _ = discussions.main(item['item_name'], item['item_dir'], item['json_file_base'])
         if not result:
             raise Exception('Unknown Error')
 
