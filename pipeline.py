@@ -13,20 +13,18 @@ import discussions
 
 VERSION = '20211008.01'
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'
-TRACKER_ID = 'TODO'
-TRACKER_HOST = 'TODO'
-MULTI_ITEM_SIZE = 1 # DO NOT CHANGE
+TRACKER_ID = 'youtube-discussions'
+TRACKER_HOST = 'localhost'
+MULTI_ITEM_SIZE = 1  # TODO
 
 
 project = Project(
-  title = "Example project",
-  project_html = """
+  title=TRACKER_ID,
+  project_html="""
     <img class="project-logo" alt="Project logo" src="http://archive.org/images/glogo.png" height="50px" />
-    <h2>Example project <span class="links"><a href="http://example.com/">Example website</a> &middot; <a href="http://example.heroku.com/">Leaderboard</a></span></h2>
-    <p>This is an example project. Under a logo and title there's some room for extra information.</p>
-    <p class="projectBroadcastMessage">Important project specific message goes here.</p>
+    <h2>YouTube Discussions <span class="links"><a href="https://www.youtube.com/">Website</a> &middot; <a href="http://tracker.archiveteam.org/youtube-discussions/">Leaderboard</a></span></h2>
+        <p>Archiving everything from YouTube Discussions.</p>
   """,
- # utc_deadline = datetime.datetime(2021,10,12, 12,0,0)
 )
 
 
