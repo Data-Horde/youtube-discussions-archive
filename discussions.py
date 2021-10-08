@@ -94,11 +94,11 @@ def docontinuation(continuation, endpoint="browse"):
                 else:
                     raise YouTubeError(f"Error from YouTube, no error message provided")
             elif "contents" in myrjsonkeys:
-                raise DownloadException(
-                    "Contents key detected in response, which indicates that we have not received discussion tab data. Retrieving discussion tab data for this channel is likely not possible. This error typically occurs on automatically-generated YouTube channels. Aborting.")
+                print("Contents key detected in response, which indicates that we have not received discussion tab data. Retrieving discussion tab data for this channel is likely not possible. This error typically occurs on automatically-generated YouTube channels. Treating as end of comments.")
+                return [{"reloadContinuationItemsCommand": {"continuationItems": [{}]}}]
             elif "continuationContents" in myrjsonkeys:
-                raise DownloadException(
-                    "continuationContents key detected in response, which indicates that we have not received discussion tab data. Retrieving discussion tab data for this channel is likely not possible. This error typically occurs on automatically-generated YouTube channels. Aborting.")
+                print("continuationContents key detected in response, which indicates that we have not received discussion tab data. Retrieving discussion tab data for this channel is likely not possible. This error typically occurs on automatically-generated YouTube channels. Treating as end of comments.")
+                return [{"reloadContinuationItemsCommand": {"continuationItems": [{}]}}]
             elif "onResponseReceivedEndpoints" in myrjsonkeys and r.status_code == 200:
                 return myrjson["onResponseReceivedEndpoints"]
             elif r.status_code == 404:
