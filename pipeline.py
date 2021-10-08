@@ -138,7 +138,7 @@ def stats_id_function(item):
 
 pipeline = Pipeline(
     CheckIP(),
-    GetItemFromTracker('http://{}/{}/'
+    GetItemFromTracker('http://{}/{}/multi={}/'
                        .format(TRACKER_HOST, TRACKER_ID, MULTI_ITEM_SIZE),
                        downloader, VERSION),
     PrepareDirectories(json_prefix=TRACKER_ID),
