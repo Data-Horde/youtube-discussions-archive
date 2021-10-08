@@ -16,8 +16,16 @@ import os
 import shutil
 import hashlib
 import time
-import discussions
+#from .. import discussions
 import sys
+
+# https://stackoverflow.com/a/50905, https://stackoverflow.com/a/67692
+import os.path
+import inspect
+import importlib.util
+spec = importlib.util.spec_from_file_location("discussions", os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))+"/discussions.py")
+discussions = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(discussions)
 
 if StrictVersion(seesaw.__version__) < StrictVersion('0.8.5'):
     raise Exception('This pipeline needs seesaw version 0.8.5 or higher.')
@@ -25,14 +33,14 @@ if StrictVersion(seesaw.__version__) < StrictVersion('0.8.5'):
 VERSION = '20211008.02'
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'
 TRACKER_ID = 'youtube-discussions'
-TRACKER_HOST = 'localhost'
+TRACKER_HOST = 'localhost:9080'
 MULTI_ITEM_SIZE = 1  # TODO: what is this?
 
 
 project = Project(
   title=TRACKER_ID,
   project_html="""
-    <img class="project-logo" alt="Project logo" src="http://archive.org/images/glogo.png" height="50px" />
+    <img class="project-logo" alt="Project logo" src="https://wiki.archiveteam.org/images/4/4d/YouTube_logo_2017.png" height="50px" />
     <h2>YouTube Discussions <span class="links"><a href="https://www.youtube.com/">Website</a> &middot; <a href="http://tracker.archiveteam.org/youtube-discussions/">Leaderboard</a></span></h2>
         <p>Archiving everything from YouTube Discussions.</p>
   """,
@@ -130,7 +138,7 @@ def stats_id_function(item):
 
 pipeline = Pipeline(
     CheckIP(),
-    GetItemFromTracker('http://{}/{}/multi={}/'
+    GetItemFromTracker('http://{}/{}/'
                        .format(TRACKER_HOST, TRACKER_ID, MULTI_ITEM_SIZE),
                        downloader, VERSION),
     PrepareDirectories(json_prefix=TRACKER_ID),
