@@ -81,6 +81,9 @@ class PrepareDirectories(SimpleTask):
 
 
 class DiscussionsDownload(SimpleTask):
+    def __init__(self):
+        SimpleTask.__init__(self, 'DiscussionsDownload')
+
     def process(self, item):
         result, _ = discussions.main(item['item_name'], item['item_dir'])
         if not result:
