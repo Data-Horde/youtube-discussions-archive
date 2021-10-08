@@ -17,6 +17,25 @@ Running with a warrior
 
 Follow the [instructions on the ArchiveTeam wiki](http://archiveteam.org/index.php?title=Warrior) for installing the Warrior, and select the "{{PROJECT_NAME}}" project in the Warrior interface.
 
+Running with Docker
+-------------------------
+
+**TODO: docker image**
+
+**docker-compose from source**
+```yaml
+# docker-compose.yml
+version: "3"
+services:
+    discussions-grab:
+        build: https://github.com/Data-Horde/youtube-discussions-archive.git#main
+        command: --concurrent 2 YOURNICKHERE
+```
+    
+    sudo docker-compose up
+
+
+
 Running without a warrior
 -------------------------
 To run this outside the warrior, clone this repository, cd into its directory and run:
