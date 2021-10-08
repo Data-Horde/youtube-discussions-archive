@@ -10,6 +10,7 @@ from seesaw.pipeline import Pipeline
 from seesaw.project import Project
 from seesaw.config import NumberConfigValue, realize
 from seesaw.item import ItemInterpolation, ItemValue
+from distutils.version import StrictVersion
 import socket
 import os
 import shutil
@@ -17,6 +18,9 @@ import hashlib
 import time
 import discussions
 import sys
+
+if StrictVersion(seesaw.__version__) < StrictVersion('0.8.5'):
+    raise Exception('This pipeline needs seesaw version 0.8.5 or higher.')
 
 VERSION = '20211008.02'
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'
