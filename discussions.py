@@ -216,7 +216,7 @@ def extractcomment(comment, is_reply=False):
     return commentroot, addcnt, comment_channel_ids
 
 
-def main(channel_id, download_dir):
+def main(channel_id, download_dir, json_file_base=None):
     timestamp = time()
     cont = docontinuation(_generate_discussion_continuation(channel_id))
 
@@ -266,7 +266,8 @@ def main(channel_id, download_dir):
             "INFO: Number of retrieved comments does not equal expected count. This is a common occurence due to inaccuracies in YouTube's counting system and can safely be ignored in most cases.")
 
     # minify JSON https://stackoverflow.com/a/33233406
-    open(Path(download_dir, channel_id + ".json"), "w").write(
+    base = json_file_base or channel_id
+    open(Path(download_dir, base + ".json"), "w").write(
         dumps({"UCID": channel_id, "expected_count": commentscount, "timestamp": timestamp, "comments": comments},
               separators=(',', ':')))
 
