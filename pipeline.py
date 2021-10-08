@@ -9,6 +9,7 @@ import os
 import shutil
 import hashlib
 import time
+import discussions
 
 VERSION = '20211008.01'
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'
@@ -78,13 +79,13 @@ class PrepareDirectories(SimpleTask):
 
         item['item_dir'] = dirname
 
-        # open('%(item_dir)s/%(warc_file_base)s.warc.gz' % item, 'w').close()
-        # open('%(item_dir)s/%(warc_file_base)s_bad-items.txt' % item, 'w').close()
-        # open('%(item_dir)s/%(warc_file_base)s_data.txt' % item, 'w').close()
 
 class DiscussionsDownload(SimpleTask):
-    ...
-
+    def process(self, item):
+        try:
+            result, _ = discussions.main(item['item_name'], item['item_dir'])
+        except Exception as e:
+            ...
 
 pipeline = Pipeline(
     CheckIP(),
