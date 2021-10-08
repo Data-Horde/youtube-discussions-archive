@@ -90,11 +90,12 @@ class PrepareDirectories(SimpleTask):
         if os.path.isdir(dirname):
             shutil.rmtree(dirname)
         os.makedirs(dirname)
-        item['json_file_base'] = '-'.join([
-            self.json_prefix,
-            channel_id,
-            time.strftime('%Y%m%d-%H%M%S')
-        ])
+        item['json_file_base'] = channel_id
+        # item['json_file_base'] = '-'.join([
+        #     self.json_prefix,
+        #     channel_id,
+        #     time.strftime('%Y%m%d-%H%M%S')
+        # ])
         item['item_dir'] = dirname
 
 
